@@ -1,0 +1,49 @@
+run = "npm run test:watch"
+
+entrypoint = "src/index.ts"
+modules = ["nodejs-20:v12-20231130-57acee0"]
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["tsx", "index.ts"]
+deploymentTarget = "cloudrun"
+ignorePorts = false
+
+[[ports]]
+localPort = 24678
+externalPort = 80
+
+
+# disabled for now until multiple LSPs are properly supported
+# [languages.eslint]
+# pattern = "**{*.ts,*.js,*.tsx,*.jsx,*.json}"
+# [languages.eslint.languageServer]
+# start = "vscode-eslint-language-server --stdio"
+# [languages.eslint.languageServer.configuration]
+# nodePath = "node"        # this should resolve to nvm
+# validate = "on"
+# useESLintClass = false
+# format = false
+# quiet = false
+# run = "onType"
+# packageManager = "npm"
+# rulesCustomizations = []
+# onIgnoredFiles = "off"
+# [languages.eslint.languageServer.configuration.workspaceFolder]
+# name = "replit-storage-typescript"
+# # we seem to not be able to use ${REPL_HOME} here as the vscode package does
+# # not evaluate the environment variable, and we need a `/` prefix so it
+# # knows we gave it an absolute path
+# uri = "file:///home/runner/${REPL_SLUG}"
+# [languages.eslint.languageServer.configuration.experimental]
+# useFlatConfig = false
+# [languages.eslint.languageServer.configuration.problems]
+# shortenToSingleLine = false
+# [languages.eslint.languageServer.configuration.codeAction.disableRuleComment]
+# enable = true
+# location = "separateLine"
+# commentStyle = "line"
+# [languages.eslint.languageServer.configuration.codeAction.showDocumentation]
+# enable = true
