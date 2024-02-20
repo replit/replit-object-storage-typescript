@@ -1,4 +1,4 @@
-run = "npm run test:watch"
+run = "npm run test"
 
 entrypoint = "src/index.ts"
 modules = ["nodejs-20:v12-20231130-57acee0"]
@@ -6,14 +6,12 @@ modules = ["nodejs-20:v12-20231130-57acee0"]
 [nix]
 channel = "stable-23_11"
 
-[deployment]
-run = ["tsx", "index.ts"]
-deploymentTarget = "cloudrun"
-ignorePorts = false
-
 [[ports]]
 localPort = 24678
 externalPort = 80
+
+[objectStorage]
+defaultBucketID = "replit-objstore-ea9e4157-6777-4678-abca-becea84b6153"
 
 
 # disabled for now until multiple LSPs are properly supported

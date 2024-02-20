@@ -11,7 +11,7 @@ export const REPLIT_ADC: ExternalAccountClientOptions = {
   audience: 'replit',
   subject_token_type: 'access_token',
   token_url: REPLIT_TOKEN_URL,
-  type: 'replit',
+  type: 'external_account',
   credential_source: {
     url: REPLIT_CREDENTIAL_URL,
     format: {
@@ -19,4 +19,5 @@ export const REPLIT_ADC: ExternalAccountClientOptions = {
       subject_token_field_name: 'access_token',
     },
   },
+  universe_domain: 'googleapis.com',
 };
