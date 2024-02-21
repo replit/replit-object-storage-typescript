@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import { PassThrough } from 'stream';
 
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { afterAll, assert, beforeAll, describe, expect, test } from 'vitest';
 
+import { StreamRequestError } from './';
 import { Client } from './client';
 
 let client: Client;
@@ -38,11 +39,13 @@ describe('copy', () => {
   });
 
   test('does not exist', async () => {
-    try {
-      await client.copy('bad-object-1', 'should-never-happen');
-    } catch (error) {
-      expect(error.code).toBe(404);
-    }
+    const { ok, error } = await client.copy(
+      'bad-object-1',
+      'should-never-happen',
+    );
+    expect(ok).toBeFalsy();
+    expect(error?.message).toBeTruthy();
+    expect(error?.statusCode).toBe(404);
   });
 });
 
@@ -61,6 +64,21 @@ describe('delete', () => {
     expect(existsResult.ok).toBeTruthy();
     expect(existsResult.value).toBeFalsy();
   });
+
+  test('does not exist (default)', async () => {
+    const { ok, error } = await client.delete('bad-object-1');
+    expect(ok).toBeFalsy();
+    expect(error?.message).toBeTruthy();
+    expect(error?.statusCode).toBe(404);
+  });
+
+  test('does not exist (ignore if not exists)', async () => {
+    const { ok, value } = await client.delete('bad-object-1', {
+      ignoreNotFound: true,
+    });
+    expect(ok).toBeTruthy();
+    expect(value).toBeNull();
+  });
 });
 
 describe('downloadAsBytes', () => {
@@ -70,7 +88,17 @@ describe('downloadAsBytes', () => {
 
     const { ok, value: buffer } = await client.downloadAsBytes(objectName);
     expect(ok).toBeTruthy();
+    if (buffer === undefined) {
+      assert.fail('buffer must be defined');
+    }
     expect(buffer.toString()).toBe(testFileContents);
+  });
+
+  test('does not exist', async () => {
+    const { ok, error } = await client.downloadAsBytes('bad-object-1');
+    expect(ok).toBeFalsy();
+    expect(error?.message).toBeTruthy();
+    expect(error?.statusCode).toBe(404);
   });
 });
 
@@ -82,6 +110,13 @@ describe('downloadAsText', () => {
     const { ok, value: text } = await client.downloadAsText(objectName);
     expect(ok).toBeTruthy();
     expect(text).toBe(testFileContents);
+  });
+
+  test('does not exist', async () => {
+    const { ok, error } = await client.downloadAsText('bad-object-1');
+    expect(ok).toBeFalsy();
+    expect(error?.message).toBeTruthy();
+    expect(error?.statusCode).toBe(404);
   });
 });
 
@@ -101,6 +136,17 @@ describe('downloadToFilename', () => {
 
     fs.rmdirSync(localTestDir, { recursive: true });
   });
+
+  test('does not exist', async () => {
+    const filename = './download-to-filename-1.txt';
+    const { ok, error } = await client.downloadToFilename(
+      'bad-object-1',
+      filename,
+    );
+    expect(ok).toBeFalsy();
+    expect(error?.message).toBeTruthy();
+    expect(error?.statusCode).toBe(404);
+  });
 });
 
 describe('downloadAsStream', () => {
@@ -109,12 +155,25 @@ describe('downloadAsStream', () => {
     await client.uploadFromText(objectName, testFileContents);
 
     let contents = '';
-    const { ok, value: stream } = client.downloadAsStream(objectName);
-    expect(ok).toBeTruthy();
+    const stream = client.downloadAsStream(objectName);
     await stream.forEach((chunk: string) => {
       contents += chunk.toString();
     });
     expect(contents).toBe(testFileContents);
+  });
+
+  test('does not exist', async () => {
+    const stream = client.downloadAsStream('bad-object-1');
+    stream.on('error', (error) => {
+      expect(error).toBeInstanceOf(StreamRequestError);
+      const requestError = (error as StreamRequestError).getRequestError();
+      expect(requestError.message).toBeTruthy();
+      expect(requestError.statusCode).toBe(404);
+    });
+    await new Promise((resolve) => {
+      stream.on('end', resolve);
+      stream.on('error', resolve);
+    });
   });
 });
 
@@ -214,7 +273,10 @@ describe('uploadFromStream', () => {
 });
 
 afterAll(async () => {
-  const { value: files } = await client.list();
-  const deletions = files.map((file) => client.delete(file));
+  const { value: objects } = await client.list();
+  if (objects == undefined) {
+    assert.fail('failed to get objects');
+  }
+  const deletions = objects.map((object) => client.delete(object.name));
   await Promise.all(deletions);
 });
