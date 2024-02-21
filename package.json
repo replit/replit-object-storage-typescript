@@ -1,5 +1,5 @@
 {
-  "name": "@replit/storage",
+  "name": "@replit/object-storage",
   "version": "0.0.1",
   "description": "",
   "engines": {
