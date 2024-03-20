@@ -1,6 +1,6 @@
 import { ExternalAccountClientOptions } from 'google-auth-library';
 
-export const REPLIT_SIDECAR_ENDPOINT = 'http://0.0.0.0:1106';
+export const REPLIT_SIDECAR_ENDPOINT = 'http://127.0.0.1:1106';
 export const REPLIT_DEFAULT_BUCKET_URL =
   REPLIT_SIDECAR_ENDPOINT + '/object-storage/default-bucket';
 
