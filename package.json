@@ -1,6 +1,6 @@
 {
   "name": "@replit/object-storage",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "",
   "engines": {
     "node": ">=18.0.0"
@@ -38,9 +38,9 @@
     "fix": "npm run format:fix && npm run lint:fix",
     "typecheck": "tsc --noEmit",
     "allstatic": "npm run typecheck && npm run lint && npm run format",
-    "clean": "rm -rf dist docs/generated",
+    "clean": "rm -rf dist docs",
     "build": "tsup src/index.ts  --sourcemap --dts --platform node --format esm,cjs",
-    "build:docs": "./docs/build.sh",
+    "build:docs": "typedoc --plugin typedoc-plugin-markdown --excludeExternals --out docs",
     "prepublishOnly": "npm run allstatic && npm run test && npm run build && npm run test:build"
   },
   "prettier": {
@@ -58,6 +58,8 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "tsup": "^7.2.0",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   }

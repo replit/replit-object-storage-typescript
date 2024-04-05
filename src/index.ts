@@ -1,4 +1,11 @@
-import { Client } from './client';
+import {
+  Client,
+  ClientOptions,
+  DeleteOptions,
+  DownloadOptions,
+  ListOptions,
+  UploadOptions,
+} from './client';
 import type { ErrResult, OkResult, Result } from './result';
 
 /**
@@ -44,3 +51,10 @@ export class StreamRequestError extends Error {
 }
 
 export { Client, ErrResult, OkResult, Result };
+export type {
+  ClientOptions,
+  DeleteOptions,
+  DownloadOptions,
+  ListOptions,
+  UploadOptions,
+};
