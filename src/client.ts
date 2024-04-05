@@ -13,6 +13,7 @@ import { Ok, Result } from './result';
 
 /**
  * Configuration options for client creation.
+ * @public
  */
 export interface ClientOptions {
   /**
@@ -107,11 +108,14 @@ type State =
  * @public
  */
 export class Client {
+  /**
+   * @hidden
+   */
   private state: State;
 
   /**
    * Creates a new client.
-   * @param bucketId - the ID of the bucket this client will interact with. If none is specified, the default bucket will be used.
+   * @param options - configurations to setup the client.
    */
   constructor(options?: ClientOptions) {
     this.state = {

@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["./src/index.ts"],
+  "githubPages": false,
+  "hideBreadcrumbs": true,
+  "hideInPageTOC": true,
+  "out": "doc"
+}
