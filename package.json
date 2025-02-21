@@ -48,7 +48,8 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "@google-cloud/storage": "^7.7.0"
+    "@google-cloud/storage": "^7.7.0",
+    "@replit/object-storage": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.4.1",
