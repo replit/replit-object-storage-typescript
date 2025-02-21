@@ -43,6 +43,9 @@
     "build:docs": "typedoc --plugin typedoc-plugin-markdown --excludeExternals --out docs",
     "prepublishOnly": "npm run allstatic && npm run test && npm run build && npm run test:build"
   },
+  "resolutions": {
+    "rollup": "^3.29.5"
+  },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
